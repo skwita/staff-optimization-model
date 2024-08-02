@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skwita.optimizationmodel.model.*;
 
 public class GraphBuilder {
+    private GraphBuilder(){}
     public static String graphToJson(DataForm dataForm) {
         char stageCode = 'A';
         for (DataRow row : dataForm.getRows()) {

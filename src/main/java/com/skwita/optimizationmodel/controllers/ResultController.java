@@ -1,4 +1,4 @@
-package com.skwita.optimizationmodel;
+package com.skwita.optimizationmodel.controllers;
 
 import java.util.List;
 
