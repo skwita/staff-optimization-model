@@ -13,7 +13,7 @@ import com.skwita.optimizationmodel.util.TableReader;
 
 
 @Controller
-public class MainController {
+public class ResultController {
 
     @GetMapping("/import")
     public String importFile() {
