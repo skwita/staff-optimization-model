@@ -11,4 +11,8 @@ import lombok.ToString;
 @ToString
 public class DataForm {
     private List<DataRow> rows;
+
+    public int size() {
+        return rows.size();
+    }
 }
