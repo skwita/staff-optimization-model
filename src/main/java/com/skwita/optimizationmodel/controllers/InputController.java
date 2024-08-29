@@ -1,4 +1,4 @@
-package com.skwita.optimizationmodel;
+package com.skwita.optimizationmodel.controllers;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.skwita.optimizationmodel.model.DataForm;
 import com.skwita.optimizationmodel.model.DataRow;
+import com.skwita.optimizationmodel.util.GraphBuilder;
 
 import org.springframework.web.bind.annotation.PostMapping;
-
 
 
 @Controller
@@ -24,15 +24,10 @@ public class InputController {
     }
     
     @PostMapping("/submitData")
-    public String submitData(DataForm dataForm) {
-        char stageCode = 'A';
-        for (DataRow row : dataForm.getRows()) {
-            row.setStageCode(Character.toString(stageCode++));
-        }
-        System.out.println(dataForm);
-
-        return "input_stages_form";
+    public String submitData(DataForm dataForm, Model model) {
+        String json = GraphBuilder.graphToJson(dataForm);
+        model.addAttribute("graphJson", json.substring(14, json.length()-1));
+        System.out.println(model.getAttribute("graphJson"));
+        return "graph";
     }
-    
-
 }

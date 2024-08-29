@@ -1,7 +1,5 @@
 package com.skwita.optimizationmodel.model;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,10 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class DataForm {
-    private List<DataRow> rows;
-
-    public int size() {
-        return rows.size();
-    }
+public class Node {
+    private String code;
+    private String[] predecessors;
 }
