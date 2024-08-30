@@ -24,8 +24,8 @@ public class ResultController {
 	public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
         TableReader reader = new TableReader(file);
 
-        List<List<Double>> dataAll = reader.readAll();
-        List<List<Double>> dataParetoFull = reader.readParetoFull();
+        List<List<Double>> dataAll = reader.getTablePoints();
+        List<List<Double>> dataParetoFull = reader.getTableParetoPoints();
 
 		model.addAttribute("dataPointsAll", dataAll.toString());
         model.addAttribute("dataPointsParetoFull", dataParetoFull.toString());
