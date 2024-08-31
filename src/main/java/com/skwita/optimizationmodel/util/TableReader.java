@@ -21,6 +21,8 @@ public class TableReader {
         this.multipartFile = multipartFile;
     }
 
+    public TableReader() {}
+
     public List<List<Double>> getTablePoints() {
         return readTableColumns(new int[]{31,36});
     }
@@ -29,10 +31,10 @@ public class TableReader {
         return readParetoColumns(new int[]{27,28,29,30,31,36}, 4, 5);
     }
 
-    public List<List<Double>> getCustomTablePoints(List<List<Double>> allPoints) {
+    public List<List<Double>> getCustomPoints(List<List<Double>> allPoints) {
         return calculatePareto(allPoints.stream()
-                                        .sorted((a, b) -> a.get(3).compareTo(b.get(3)))
-                                        .toList(), 4);
+                                        .sorted((a, b) -> a.get(4).compareTo(b.get(4)))
+                                        .toList(), 5);
     }
 
     private List<List<Double>> readParetoColumns(int[] columns, int timeColumn, int costColumn) {

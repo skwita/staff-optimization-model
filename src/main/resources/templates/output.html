@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="css/styles.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Graph</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.3.1/cytoscape-dagre.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+      #cy {
+        width: 100%;
+        height: 200px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- graph -->
+    <script th:inline="javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+                const data = [(${graphJson})];
+
+                const elements = [];
+
+                data.forEach((task) => {
+            elements.push({ data: { id: task.code, label: task.code } });
+          });
+
+          data.forEach((task) => {
+              task.predecessors.forEach((predecessor) => {
+                  elements.push({ data: { source: predecessor, target: task.code } });
+              });
+          });
+
+          const cy = cytoscape({
+              container: document.getElementById("graph"),
+              elements: elements,
+              style: [
+                  {
+                      selector: "node",
+                      style: {
+                          "background-color": "#666",
+                          label: "data(label)",
+                          "text-valign": "center",
+                          color: "#fff",
+                          "text-outline-width": 2,
+                          "text-outline-color": "#888",
+                      },
+                  },
+                  {
+                      selector: "edge",
+                      style: {
+                          width: 2,
+                          "line-color": "#ccc",
+                          "target-arrow-color": "#ccc",
+                          "target-arrow-shape": "triangle",
+                      },
+                  },
+              ],
+              layout: {
+                  name: "dagre",
+                  rankDir: "LR",
+              },
+          });
+      });
+    </script> 
+    
+    <!-- 10% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll10}]];
+
+        var redPointsArray = [[${stepPareto10}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 10%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart10'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    
+    <!-- 20% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll20}]];
+
+        var redPointsArray = [[${stepPareto20}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 20%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart20'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 30% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll30}]];
+
+        var redPointsArray = [[${stepPareto30}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 30%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart30'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 40% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll40}]];
+
+        var redPointsArray = [[${stepPareto40}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 40%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart40'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 50% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll50}]];
+
+        var redPointsArray = [[${stepPareto50}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 50%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart50'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 60% -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll60}]];
+
+        var redPointsArray = [[${stepPareto60}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 60%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart60'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 70 -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll70}]];
+
+        var redPointsArray = [[${stepPareto70}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 90%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart70'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 80 -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll80}]];
+
+        var redPointsArray = [[${stepPareto80}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 80%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart80'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 90 -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll90}]];
+
+        var redPointsArray = [[${stepPareto90}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 90%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart90'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- 100 -->
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Срок проекта (дни)');
+        data.addColumn('number', 'ЗП с коэффициентами на привлечение людей');
+        data.addColumn({type: 'string', role: 'style'});
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText', p: { html: true } });
+
+        var bluePointsArray = [[${stepAll100}]];
+
+        var redPointsArray = [[${stepPareto100}]];
+
+        // Add blue points to the data table
+        bluePointsArray.forEach(function(point) {
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: blue; }', null, null]);
+        });
+
+        // Add red points with annotations to the data table
+        redPointsArray.forEach(function(point) {
+          var annotation = '' + point[0];
+          data.addRow([point[5], point[4], 'point { size: 3; fill-color: red; }', annotation, annotation]);
+        });
+
+        var options = {
+          explorer: {},
+          title: 'Сравнение срока и заработной платы 100%',
+          hAxis: {title: 'Срок проекта (дни)'},
+          vAxis: {title: 'ЗП с коэффициентами на привлечение людей'},
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            }
+          },
+          pointSize: 5,
+          lineWidth: 0,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart100'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- all no pareto -->
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var header = ["Срок", "заработная плата"];
+        var data = [[${stepAll100}]];
+        var result = []
+        result.push(header);
+        data.forEach(function(point) {
+          result.push([point[5], point[4]]);
+        });
+        var dataAll = google.visualization.arrayToDataTable(result);
+
+        var options = {
+          explorer: {},
+          title: "Сравнение срока и заработной платы",
+          pointSize: 3,
+          hAxis: { title: "Срок", minValue: 0, maxValue: 15 },
+          vAxis: { title: "ЗП", minValue: 0, maxValue: 15 },
+          legend: "none",
+        };
+
+        var chart = new google.visualization.ScatterChart(
+          document.getElementById("chart_div")
+        );
+
+        chart.draw(dataAll, options);
+      }
+    </script>
+
+    <!-- table -->
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ['table'] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn("number", "№");
+        data.addColumn("number", "Кол-во аналитиков");
+        data.addColumn("number", "Кол-во разработчиков");
+        data.addColumn("number", "Кол-во тестировщиков");
+        data.addColumn("number", "ЗП");
+        data.addColumn("number", "Срок");
+
+        // Example data array
+        var dataArray = [[${stepPareto100}]];
+
+        dataArray.forEach(function (row) {
+          data.addRow(row);
+        });
+
+        data.sort([{column: 0}]);
+
+        var table = new google.visualization.Table(
+          document.getElementById("table_div")
+        );
+
+        table.draw(data, {
+          showRowNumber: false,
+          width: "100%",
+          height: "100%",
+        });
+      }
+    </script>
+
+    <!-- pareto curve -->
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn("number", "Срок проекта (дни)");
+        data.addColumn("number", "ЗП с коэффициентами на привлечение людей");
+        data.addColumn({ type: "string", role: "annotation" });
+        data.addColumn({ type: "string", role: "annotationText" });
+
+        // Example data array
+        var dataArray = [[${stepPareto100}]];
+
+        dataArray.forEach(function (row) {
+          var projectDuration = row[5];
+          var salary = row[4];
+          var operationNumber = "" + row[0];
+          data.addRow([
+            projectDuration,
+            salary,
+            operationNumber,
+            operationNumber,
+          ]);
+        });
+
+        var options = {
+          explorer: {},
+          title: "Сравнение срока и заработной платы",
+          hAxis: { title: "Срок проекта (дни)" },
+          vAxis: { title: "ЗП с коэффициентами на привлечение людей" },
+          annotations: {
+            textStyle: {
+              fontSize: 12,
+              auraColor: "none",
+              color: "#555",
+            },
+            boxStyle: {
+              stroke: "#888",
+              strokeWidth: 1,
+              color: "#ffffff"
+            },
+          },
+          curveType: "function",
+          pointSize: 5,
+          lineWidth: 2,
+          legend: "none",
+        };
+
+        var chart = new google.visualization.LineChart(
+          document.getElementById("curve_chart")
+        );
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- area graph -->
+    <script type="text/javascript">
+      google.charts.load("current", {packages:['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ["Element", "Density"],
+          ["10%", [[${area10}]]],
+          ["20%", [[${area20}]]],
+          ["30%", [[${area30}]]],
+          ["40%", [[${area40}]]],
+          ["50%", [[${area50}]]],
+          ["60%", [[${area60}]]],
+          ["70%", [[${area70}]]],
+          ["80%", [[${area80}]]],
+          ["90%", [[${area90}]]],
+          ["100%", [[${area100}]]],
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                         { calc: "stringify",
+                           sourceColumn: 1,
+                           type: "string",
+                           role: "annotation" }]);
+
+        var options = {
+          title: "Площадь под графиком",
+          width: "100%",
+          height: 400,
+          bar: {groupWidth: "95%"},
+          legend: { position: "none" },
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_area"));
+        chart.draw(view, options);
+    }
+    </script>
+
+    <div class="graph" id="graph"></div>
+    <div class="container_grid">
+        <div>
+            <div
+                class="chart_grid"
+                id="chart_div"
+            ></div>
+        </div>
+        <div>
+            <div
+                class="chart_grid"
+                id="curve_chart"
+            ></div>
+        </div>
+        <div>
+            <div
+                class="chart_grid"
+                id="chart100"
+            ></div>
+        </div>
+    </div>
+    <div class="container_grid">
+        <div>
+            <div class="chart_grid" id="chart10"></div>
+            <div class="chart_area_text" th:text="${area10}"></div> 
+        </div>
+        <div>
+            <div class="chart_grid" id="chart20"></div>
+            <div class="chart_area_text" th:text="${area20}"></div>
+        </div>
+        <div>
+            <div class="chart_grid" id="chart30"></div>
+            <div class="chart_area_text" th:text="${area30}"></div> 
+        </div>
+    </div>
+    <div class="container_grid">
+        <div>
+            <div class="chart_grid" id="chart40"></div>
+            <div class="chart_area_text" th:text="${area40}"></div> 
+        </div>
+        <div>
+            <div class="chart_grid" id="chart50"></div>
+            <div class="chart_area_text" th:text="${area50}"></div>
+        </div>
+        <div>
+            <div class="chart_grid" id="chart60"></div>
+            <div class="chart_area_text" th:text="${area60}"></div>  
+        </div>
+    </div>
+    <div class="container_grid">
+        <div>
+            <div class="chart_grid" id="chart70"></div>
+            <div class="chart_area_text" th:text="${area70}"></div>  
+        </div>
+        <div>
+            <div class="chart_grid" id="chart80"></div>
+            <div class="chart_area_text" th:text="${area80}"></div>
+        </div>
+        <div>
+            <div class="chart_grid" id="chart90"></div>
+            <div class="chart_area_text" th:text="${area90}"></div>  
+        </div>
+    </div>
+    <div class="table" id="table_div"></div>
+    <div class="chart_bottom" id="chart_area"></div>
+  </body>
+</html>
