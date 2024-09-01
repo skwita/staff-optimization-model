@@ -44,8 +44,24 @@ public class InputController {
                                                (int) Math.round(dataForm.getIterations() * 0.8),
                                                (int) Math.round(dataForm.getIterations() * 0.9),
                                                (int) Math.round(dataForm.getIterations() * 1.0));
+                                               
+        
+        List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9));
+        for (int j = 0; j < teams100.size(); j++) {
+            List<Double> temp = new ArrayList<>();
+            temp.add((double) j);
+            temp.addAll(teams100.get(j));
+            teams100.set(j, temp);
+        }
 
-        for (int i = 0; i < iterationSteps.size(); i++) {
+        List<List<Double>> optimalTeams100 = tableReader.getCustomPoints(teams100);
+
+        model.addAttribute("stepPareto100", optimalTeams100);
+        model.addAttribute("stepAll100", teams100);
+        model.addAttribute("area100", AreaFinder.getArea(optimalTeams100, optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
+
+
+        for (int i = 0; i < iterationSteps.size() - 1; i++) {
             List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i));
             for (int j = 0; j < teams.size(); j++) {
                 List<Double> temp = new ArrayList<>();
@@ -55,7 +71,7 @@ public class InputController {
             }
             model.addAttribute("stepPareto" + (i + 1) * 10, tableReader.getCustomPoints(teams));
             model.addAttribute("stepAll" + (i + 1) * 10, teams);
-            model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(teams));
+            model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(tableReader.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
         }
 
         return "output";

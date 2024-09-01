@@ -786,7 +786,7 @@
           bar: {groupWidth: "95%"},
           legend: { position: "none" },
         };
-        var chart = new google.visualization.ColumnChart(document.getElementById("chart_area"));
+        var chart = new google.visualization.LineChart(document.getElementById("chart_area"));
         chart.draw(view, options);
     }
     </script>
@@ -810,48 +810,68 @@
                 class="chart_grid"
                 id="chart100"
             ></div>
+            <div class="chart_area_text" th:text="${stepPareto100.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll100.size}"></div> 
         </div>
     </div>
     <div class="container_grid">
         <div>
             <div class="chart_grid" id="chart10"></div>
             <div class="chart_area_text" th:text="${area10}"></div> 
+            <div class="chart_area_text" th:text="${stepPareto10.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll10.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart20"></div>
             <div class="chart_area_text" th:text="${area20}"></div>
+            <div class="chart_area_text" th:text="${stepPareto20.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll20.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart30"></div>
             <div class="chart_area_text" th:text="${area30}"></div> 
+            <div class="chart_area_text" th:text="${stepPareto30.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll30.size}"></div> 
         </div>
     </div>
     <div class="container_grid">
         <div>
             <div class="chart_grid" id="chart40"></div>
             <div class="chart_area_text" th:text="${area40}"></div> 
+            <div class="chart_area_text" th:text="${stepPareto40.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll40.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart50"></div>
             <div class="chart_area_text" th:text="${area50}"></div>
+            <div class="chart_area_text" th:text="${stepPareto50.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll50.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart60"></div>
             <div class="chart_area_text" th:text="${area60}"></div>  
+            <div class="chart_area_text" th:text="${stepPareto60.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll60.size}"></div> 
         </div>
     </div>
     <div class="container_grid">
         <div>
             <div class="chart_grid" id="chart70"></div>
             <div class="chart_area_text" th:text="${area70}"></div>  
+            <div class="chart_area_text" th:text="${stepPareto70.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll70.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart80"></div>
             <div class="chart_area_text" th:text="${area80}"></div>
+            <div class="chart_area_text" th:text="${stepPareto80.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll80.size}"></div> 
         </div>
         <div>
             <div class="chart_grid" id="chart90"></div>
             <div class="chart_area_text" th:text="${area90}"></div>  
+            <div class="chart_area_text" th:text="${stepPareto90.size}"></div> 
+            <div class="chart_area_text" th:text="${stepAll90.size}"></div> 
         </div>
     </div>
     <div class="table" id="table_div"></div>
