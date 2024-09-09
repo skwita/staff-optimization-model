@@ -10,7 +10,7 @@ import com.skwita.optimizationmodel.model.DataForm;
 import com.skwita.optimizationmodel.model.DataRow;
 import com.skwita.optimizationmodel.util.AreaFinder;
 import com.skwita.optimizationmodel.util.GraphBuilder;
-import com.skwita.optimizationmodel.util.TableReader;
+import com.skwita.optimizationmodel.util.ParetoFinder;
 import com.skwita.optimizationmodel.util.TeamGenerator;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class InputController {
+    
+    //input form
     @GetMapping("/")
     public String showInputStagesForm(Model model) {
         DataForm dataForm = new DataForm();
@@ -27,12 +29,15 @@ public class InputController {
         return "input_stages_form";
     }
     
+    //resulting page with plots
     @PostMapping("/submitData")
     public String submitData(DataForm dataForm, Model model) {
+
+        //building graph
         String json = GraphBuilder.graphToJson(dataForm);
         model.addAttribute("graphJson", json.substring(14, json.length()-1));
 
-        TableReader tableReader = new TableReader();
+        ParetoFinder paretoFinder = new ParetoFinder();
         TeamGenerator teamGenerator = new TeamGenerator(dataForm);
         List<Integer> iterationSteps = List.of((int) Math.round(dataForm.getIterations() * 0.1),
                                                (int) Math.round(dataForm.getIterations() * 0.2),
@@ -45,7 +50,7 @@ public class InputController {
                                                (int) Math.round(dataForm.getIterations() * 0.9),
                                                (int) Math.round(dataForm.getIterations() * 1.0));
                                                
-        
+        //calculations for maximum number of iterations
         List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9));
         for (int j = 0; j < teams100.size(); j++) {
             List<Double> temp = new ArrayList<>();
@@ -54,7 +59,7 @@ public class InputController {
             teams100.set(j, temp);
         }
 
-        List<List<Double>> optimalTeams100 = tableReader.getCustomPoints(teams100);
+        List<List<Double>> optimalTeams100 = paretoFinder.getCustomPoints(teams100);
 
         double[] avgArea = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
@@ -65,7 +70,8 @@ public class InputController {
         model.addAttribute("area100", avgArea[9]);
 
         int maxIterationsForAvgArea = 1000;
-
+        
+        //calculations for iterations [10%, .., 90%]
         for (int k = 0; k < maxIterationsForAvgArea; k++) {
             for (int i = 0; i < iterationSteps.size() - 1; i++) {
                 List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i));
@@ -75,11 +81,11 @@ public class InputController {
                     temp.addAll(teams.get(j));
                     teams.set(j, temp);
                 }
-                avgArea[i] += AreaFinder.getArea(tableReader.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
+                avgArea[i] += AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
                 if (k == maxIterationsForAvgArea - 1) {
-                    model.addAttribute("stepPareto" + (i + 1) * 10, tableReader.getCustomPoints(teams));
+                    model.addAttribute("stepPareto" + (i + 1) * 10, paretoFinder.getCustomPoints(teams));
                     model.addAttribute("stepAll" + (i + 1) * 10, teams);
-                    model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(tableReader.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
+                    model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
                 }
             }
         }
