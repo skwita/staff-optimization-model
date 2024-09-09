@@ -35,9 +35,9 @@ public class TeamGenerator {
                 iterationCounter++;
             }
 
+            currentTeam.add(Double.valueOf(numAnalysts));
             currentTeam.add(Double.valueOf(numDevelopers));
             currentTeam.add(Double.valueOf(numTesters));
-            currentTeam.add(Double.valueOf(numAnalysts));
             double time = calculateTime(numDevelopers, numTesters, numAnalysts);
             currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts, time));
             currentTeam.add(time);
@@ -49,7 +49,27 @@ public class TeamGenerator {
     }
 
     private double calculateCost(int numDevelopers, int numTesters, int numAnalysts, double time) {
-        return ((double)numDevelopers * 1000 + numTesters * 500 + numAnalysts * 900) * time;
+        Map<String, Integer> roleCapacity = new HashMap<>();
+        roleCapacity.put("developer", numDevelopers);
+        roleCapacity.put("tester", numTesters);
+        roleCapacity.put("analyst", numAnalysts);
+        
+        double cost = 0.0;
+
+        for (DataRow row : dataForm.getRows()) {
+            int availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), 1);
+            double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (availableWorkers / (1 + 0.05 * availableWorkers * (availableWorkers - 1) / 2));
+
+            if (row.getResponsibleRole().equals("developer")) {
+                cost += timeToComplete * 1 * numDevelopers;
+            } else if (row.getResponsibleRole().equals("tester")){
+                cost += timeToComplete * 1 * numTesters;
+            } else {
+                cost += timeToComplete * 1 * numAnalysts;
+            }
+        }
+        
+        return cost;
     }
 
     private double calculateTime(int numDevelopers, int numTesters, int numAnalysts) {
@@ -70,7 +90,7 @@ public class TeamGenerator {
             inDegree.putIfAbsent(row.getStageCode(), 0);
             
             int availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), 1);
-            double timeToComplete = Double.parseDouble(row.getLaborCosts()) / availableWorkers;
+            double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (availableWorkers / (1 + 0.05 * availableWorkers * (availableWorkers - 1) / 2));
             stageDurations.put(row.getStageCode(), timeToComplete);
             
             for (char ch : row.getPreviousStage().toCharArray()) {

@@ -1,9 +1,92 @@
-.container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+/* Общие настройки для всей страницы */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.chart {
-  width: 48%;
-  margin: 1%;
+
+/* Настройки для верхнего графа */
+.graph {
+    width: 66.66%; /* Занимает 2/3 ширины страницы */
+    height: 200px; /* Высота 100px */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
+
+/* Настройки для container_main */
+.container_main {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.chart_main {
+    width: 32%; /* Каждая диаграмма занимает примерно треть ширины контейнера */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    height: 500px; /* Фиксированная высота */
+}
+
+/* Настройки для контейнеров и сетки для графиков */
+.container_grid {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.container_grid > div {
+    width: 32%; /* Каждому блоку дается треть ширины контейнера с учетом отступов */
+    margin-bottom: 20px; /* Отступ снизу между блоками */
+    box-sizing: border-box; /* Учитывает отступы и границы в ширину */
+}
+
+.chart_grid {
+    width: 100%; /* Каждая диаграмма занимает примерно треть ширины контейнера */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    height: 500px; /* Фиксированная высота */
+}
+
+/* Стили для подписи под графиками */
+.chart_area_text {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    font-weight: 500; /* Подписи под графиками чуть выделены */
+}
+
+/* Настройки для таблицы и нижнего графика */
+.table, .chart_bottom {
+    width: 66%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 1%;
+    height: 400px; /* Фиксированная высота для таблицы и графика */
+}
+
+/* Адаптивность для мобильных устройств */
+/* @media (max-width: 768px) {
+    .graph, .chart_main, .chart_grid, .table, .chart_bottom {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .container_main, .container_grid {
+        flex-direction: column;
+        align-items: center;
+    }
+} */

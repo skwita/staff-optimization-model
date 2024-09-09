@@ -52,6 +52,39 @@
       <br />
       <input type="button" value="Add Row" onclick="addRow()" />
       <br /><br />
+
+      <label for="analysts">Number of Analysts:</label>
+      <input
+        type="number"
+        id="analysts"
+        th:field="*{analysts}"
+        required
+      /><br /><br />
+
+      <label for="developers">Number of Developers:</label>
+      <input
+        type="number"
+        id="developers"
+        th:field="*{developers}"
+        required
+      /><br /><br />
+
+      <label for="testers">Number of Testers:</label>
+      <input
+        type="number"
+        id="testers"
+        th:field="*{testers}"
+        required
+      /><br /><br />
+
+      <label for="iterations">Number of Iterations:</label>
+      <input
+        type="number"
+        id="iterations"
+        th:field="*{iterations}"
+        required
+      /><br /><br />
+
       <input type="submit" value="Submit" />
     </form>
   </body>
