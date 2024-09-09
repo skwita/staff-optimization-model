@@ -58,7 +58,6 @@ public class TeamGenerator {
 
         for (DataRow row : dataForm.getRows()) {
             int availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), 1);
-            //double timeToComplete = Double.parseDouble(row.getLaborCosts()) / availableWorkers;
             double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (availableWorkers / (1 + 0.05 * availableWorkers * (availableWorkers - 1) / 2));
 
             if (row.getResponsibleRole().equals("developer")) {
@@ -71,7 +70,6 @@ public class TeamGenerator {
         }
         
         return cost;
-        //return ((double)numDevelopers * 1000 + numTesters * 500 + numAnalysts * 900) * time;
     }
 
     private double calculateTime(int numDevelopers, int numTesters, int numAnalysts) {
@@ -92,7 +90,6 @@ public class TeamGenerator {
             inDegree.putIfAbsent(row.getStageCode(), 0);
             
             int availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), 1);
-            //double timeToComplete = Double.parseDouble(row.getLaborCosts()) / availableWorkers;
             double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (availableWorkers / (1 + 0.05 * availableWorkers * (availableWorkers - 1) / 2));
             stageDurations.put(row.getStageCode(), timeToComplete);
             
