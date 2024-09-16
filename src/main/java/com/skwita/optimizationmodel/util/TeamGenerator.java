@@ -13,7 +13,7 @@ public class TeamGenerator {
         this.dataForm = graphTable;
     }
     
-    public List<List<Double>> generateAll(int maxDevelopers, int maxTesters, int maxAnalysts, int numIterations) {
+    public List<List<Double>> generateAll(int maxDevelopers, int maxTesters, int maxAnalysts, int numIterations, boolean isFlipped) {
         List<List<Double>> results = new ArrayList<>();
         Set<List<Integer>> uniqueTeams = new HashSet<>();
 
@@ -39,9 +39,12 @@ public class TeamGenerator {
             currentTeam.add(Double.valueOf(numDevelopers));
             currentTeam.add(Double.valueOf(numTesters));
             double time = calculateTime(numDevelopers, numTesters, numAnalysts);
-            currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts, time));
+            if (isFlipped) {
+                currentTeam.add(1 / calculateCost(numDevelopers, numTesters, numAnalysts, time));
+            } else {
+                currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts, time));
+            }
             currentTeam.add(time);
-
             results.add(currentTeam);
         }
 

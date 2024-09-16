@@ -51,7 +51,8 @@ public class InputController {
                                                (int) Math.round(dataForm.getIterations() * 1.0));
                                                
         //calculations for maximum number of iterations
-        List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9));
+        boolean isFlipped = false;
+        List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9), isFlipped);
         for (int j = 0; j < teams100.size(); j++) {
             List<Double> temp = new ArrayList<>();
             temp.add((double) j);
@@ -59,7 +60,7 @@ public class InputController {
             teams100.set(j, temp);
         }
 
-        List<List<Double>> optimalTeams100 = paretoFinder.getCustomPoints(teams100);
+        List<List<Double>> optimalTeams100 = paretoFinder.getCustomPoints(teams100, isFlipped);
 
         double[] avgArea = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
@@ -69,23 +70,23 @@ public class InputController {
         model.addAttribute("stepAll100", teams100);
         model.addAttribute("area100", avgArea[9]);
 
-        int maxIterationsForAvgArea = 1000;
+        int maxIterationsForAvgArea = 100;
         
         //calculations for iterations [10%, .., 90%]
         for (int k = 0; k < maxIterationsForAvgArea; k++) {
             for (int i = 0; i < iterationSteps.size() - 1; i++) {
-                List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i));
+                List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i), isFlipped);
                 for (int j = 0; j < teams.size(); j++) {
                     List<Double> temp = new ArrayList<>();
                     temp.add((double) j);
                     temp.addAll(teams.get(j));
                     teams.set(j, temp);
                 }
-                avgArea[i] += AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
+                avgArea[i] += AreaFinder.getArea(paretoFinder.getCustomPoints(teams, isFlipped), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
                 if (k == maxIterationsForAvgArea - 1) {
-                    model.addAttribute("stepPareto" + (i + 1) * 10, paretoFinder.getCustomPoints(teams));
+                    model.addAttribute("stepPareto" + (i + 1) * 10, paretoFinder.getCustomPoints(teams, isFlipped));
                     model.addAttribute("stepAll" + (i + 1) * 10, teams);
-                    model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
+                    model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(paretoFinder.getCustomPoints(teams, isFlipped), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
                 }
             }
         }
