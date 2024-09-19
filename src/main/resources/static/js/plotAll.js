@@ -6,7 +6,7 @@ function drawChartAll(stepAll100, elementId) {
         var result = []
         result.push(header);
         data.forEach(function (point) {
-            result.push([point[5], point[4]]);
+            result.push([point[2], point[1]]);
         });
         var dataAll = google.visualization.arrayToDataTable(result);
 

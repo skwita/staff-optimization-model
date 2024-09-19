@@ -40,6 +40,11 @@ public class InputController {
         ParetoFinder paretoFinder = new ParetoFinder();
         TeamGenerator teamGenerator = new TeamGenerator(dataForm);
         int maxIterations = dataForm.getDevelopers() * dataForm.getAnalysts() * dataForm.getTesters();
+
+        // if (maxIterations < 500000) {
+        //     List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), maxIterations, false);
+        // }
+
         List<Integer> iterationSteps = List.of((int) Math.round(maxIterations * 0.1),
                                                (int) Math.round(maxIterations * 0.2),
                                                (int) Math.round(maxIterations * 0.3),
@@ -54,12 +59,6 @@ public class InputController {
         //calculations for maximum number of iterations
         boolean isFlipped = true;
         List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9), isFlipped);
-        for (int j = 0; j < teams100.size(); j++) {
-            List<Double> temp = new ArrayList<>();
-            temp.add((double) j);
-            temp.addAll(teams100.get(j));
-            teams100.set(j, temp);
-        }
 
         List<List<Double>> optimalTeams100 = paretoFinder.getCustomPoints(teams100, isFlipped);
 
@@ -77,12 +76,6 @@ public class InputController {
         for (int k = 0; k < maxIterationsForAvgArea; k++) {
             for (int i = 0; i < iterationSteps.size() - 1; i++) {
                 List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i), isFlipped);
-                for (int j = 0; j < teams.size(); j++) {
-                    List<Double> temp = new ArrayList<>();
-                    temp.add((double) j);
-                    temp.addAll(teams.get(j));
-                    teams.set(j, temp);
-                }
                 avgArea[i] += AreaFinder.getArea(paretoFinder.getCustomPoints(teams, isFlipped), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
                 if (k == maxIterationsForAvgArea - 1) {
                     model.addAttribute("stepPareto" + (i + 1) * 10, paretoFinder.getCustomPoints(teams, isFlipped));

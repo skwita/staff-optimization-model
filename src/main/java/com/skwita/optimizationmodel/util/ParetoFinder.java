@@ -6,14 +6,17 @@ import java.util.List;
 
 public class ParetoFinder {
     public List<List<Double>> getCustomPoints(List<List<Double>> allPoints, boolean isFlipped) {
+        int costColumn = 1; 
+        int timeColumn = 2;
+        
         if (isFlipped) {
             return calculateParetoMax(allPoints.stream()
-                                        .sorted((a, b) -> a.get(5).compareTo(b.get(5)))
-                                        .toList(), 4);
+                                        .sorted((a, b) -> a.get(timeColumn).compareTo(b.get(timeColumn)))
+                                        .toList(), costColumn);
         }
         return calculateParetoMin(allPoints.stream()
-                                        .sorted((a, b) -> a.get(5).compareTo(b.get(5)))
-                                        .toList(), 4);
+                                        .sorted((a, b) -> a.get(timeColumn).compareTo(b.get(timeColumn)))
+                                        .toList(), costColumn);
     }
 
     private List<List<Double>> calculateParetoMin(List<List<Double>> allPoints, int costColumn) {

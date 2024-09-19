@@ -35,9 +35,8 @@ public class TeamGenerator {
                 iterationCounter++;
             }
 
-            currentTeam.add(Double.valueOf(numAnalysts));
-            currentTeam.add(Double.valueOf(numDevelopers));
-            currentTeam.add(Double.valueOf(numTesters));
+            currentTeam.add(Double.valueOf(iterationCounter));
+
             double time = calculateTime(numDevelopers, numTesters, numAnalysts);
             if (isFlipped) {
                 currentTeam.add(1 / calculateCost(numDevelopers, numTesters, numAnalysts));
@@ -45,6 +44,11 @@ public class TeamGenerator {
                 currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts));
             }
             currentTeam.add(time);
+
+            currentTeam.add(Double.valueOf(numAnalysts));
+            currentTeam.add(Double.valueOf(numDevelopers));
+            currentTeam.add(Double.valueOf(numTesters));
+            
             results.add(currentTeam);
         }
 
