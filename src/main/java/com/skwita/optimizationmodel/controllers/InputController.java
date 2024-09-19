@@ -39,19 +39,20 @@ public class InputController {
 
         ParetoFinder paretoFinder = new ParetoFinder();
         TeamGenerator teamGenerator = new TeamGenerator(dataForm);
-        List<Integer> iterationSteps = List.of((int) Math.round(dataForm.getIterations() * 0.1),
-                                               (int) Math.round(dataForm.getIterations() * 0.2),
-                                               (int) Math.round(dataForm.getIterations() * 0.3),
-                                               (int) Math.round(dataForm.getIterations() * 0.4),
-                                               (int) Math.round(dataForm.getIterations() * 0.5),
-                                               (int) Math.round(dataForm.getIterations() * 0.6),
-                                               (int) Math.round(dataForm.getIterations() * 0.7),
-                                               (int) Math.round(dataForm.getIterations() * 0.8),
-                                               (int) Math.round(dataForm.getIterations() * 0.9),
-                                               (int) Math.round(dataForm.getIterations() * 1.0));
+        int maxIterations = dataForm.getDevelopers() * dataForm.getAnalysts() * dataForm.getTesters();
+        List<Integer> iterationSteps = List.of((int) Math.round(maxIterations * 0.1),
+                                               (int) Math.round(maxIterations * 0.2),
+                                               (int) Math.round(maxIterations * 0.3),
+                                               (int) Math.round(maxIterations * 0.4),
+                                               (int) Math.round(maxIterations * 0.5),
+                                               (int) Math.round(maxIterations * 0.6),
+                                               (int) Math.round(maxIterations * 0.7),
+                                               (int) Math.round(maxIterations * 0.8),
+                                               (int) Math.round(maxIterations * 0.9),
+                                               (int) Math.round(maxIterations * 1.0));
                                                
         //calculations for maximum number of iterations
-        boolean isFlipped = false;
+        boolean isFlipped = true;
         List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9), isFlipped);
         for (int j = 0; j < teams100.size(); j++) {
             List<Double> temp = new ArrayList<>();
@@ -70,7 +71,7 @@ public class InputController {
         model.addAttribute("stepAll100", teams100);
         model.addAttribute("area100", avgArea[9]);
 
-        int maxIterationsForAvgArea = 100;
+        int maxIterationsForAvgArea = 500;
         
         //calculations for iterations [10%, .., 90%]
         for (int k = 0; k < maxIterationsForAvgArea; k++) {

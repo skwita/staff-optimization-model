@@ -8,12 +8,12 @@ public class ParetoFinder {
     public List<List<Double>> getCustomPoints(List<List<Double>> allPoints, boolean isFlipped) {
         if (isFlipped) {
             return calculateParetoMax(allPoints.stream()
-                                        .sorted((a, b) -> a.get(4).compareTo(b.get(4)))
-                                        .toList(), 5);
+                                        .sorted((a, b) -> a.get(5).compareTo(b.get(5)))
+                                        .toList(), 4);
         }
         return calculateParetoMin(allPoints.stream()
-                                        .sorted((a, b) -> a.get(4).compareTo(b.get(4)))
-                                        .toList(), 5);
+                                        .sorted((a, b) -> a.get(5).compareTo(b.get(5)))
+                                        .toList(), 4);
     }
 
     private List<List<Double>> calculateParetoMin(List<List<Double>> allPoints, int costColumn) {

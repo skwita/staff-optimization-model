@@ -40,9 +40,9 @@ public class TeamGenerator {
             currentTeam.add(Double.valueOf(numTesters));
             double time = calculateTime(numDevelopers, numTesters, numAnalysts);
             if (isFlipped) {
-                currentTeam.add(1 / calculateCost(numDevelopers, numTesters, numAnalysts, time));
+                currentTeam.add(1 / calculateCost(numDevelopers, numTesters, numAnalysts));
             } else {
-                currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts, time));
+                currentTeam.add(calculateCost(numDevelopers, numTesters, numAnalysts));
             }
             currentTeam.add(time);
             results.add(currentTeam);
@@ -51,7 +51,7 @@ public class TeamGenerator {
         return results;
     }
 
-    private double calculateCost(int numDevelopers, int numTesters, int numAnalysts, double time) {
+    private double calculateCost(int numDevelopers, int numTesters, int numAnalysts) {
         Map<String, Integer> roleCapacity = new HashMap<>();
         roleCapacity.put("developer", numDevelopers);
         roleCapacity.put("tester", numTesters);
