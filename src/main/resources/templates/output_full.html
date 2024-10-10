@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="css/styles.css" rel="stylesheet" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Task Graph</title>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
+        <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+        <script src="https://unpkg.com/cytoscape-dagre@2.3.1/cytoscape-dagre.js"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script th:src="@{/js/graph.js}"></script>
+        <script th:src="@{/js/table.js}"></script>
+        <script th:src="@{/js/plotAll.js}"></script>
+        <script th:src="@{/js/paretoCurve.js}"></script>
+        <script th:src="@{/js/plotN.js}"></script>
+
+    </head>
+    <body>
+        <!-- 100 -->
+        <script type="text/javascript">
+            drawChartN([[${stepAll100}]], [[${stepPareto100}]], "chart100", "100");
+        </script>
+
+        <!-- all no pareto -->
+        <script type="text/javascript">
+            drawChartAll([[${stepAll100}]], "chart_all");
+        </script>
+
+        <!-- table -->
+        <script type="text/javascript">
+            drawTable([[${stepPareto100}]], "table_div");
+        </script>
+
+        <!-- pareto curve -->
+        <script type="text/javascript">
+            drawParetoCurve([[${stepPareto100}]], "curve_chart");
+        </script>
+
+        <div class="graph" id="graph"></div>
+        <div class="container_grid">
+            <div>
+                <div
+                    class="chart_grid"
+                    id="chart_all"
+                ></div>
+            </div>
+            <div>
+                <div
+                    class="chart_grid"
+                    id="curve_chart"
+                ></div>
+            </div>
+            <div>
+                <div
+                    class="chart_grid"
+                    id="chart100"
+                ></div>
+            </div>
+        </div>
+        <div class="table" id="table_div"></div>
+    </body>
+</html>

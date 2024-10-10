@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class InputController {
-    
+    private static final String DATA_PARETO = "stepPareto100";
+    private static final String DATA_ALL = "stepAll100";
+    private static final String DATA_AREA = "area";
+    private static final String DATA_AREA_DIFF = "areaDiff";
     //input form
     @GetMapping("/")
     public String showInputStagesForm(Model model) {
@@ -32,66 +35,87 @@ public class InputController {
     //resulting page with plots
     @PostMapping("/submitData")
     public String submitData(DataForm dataForm, Model model) {
-
-        //building graph
+        
+        // Building graph
         String json = GraphBuilder.graphToJson(dataForm);
         model.addAttribute("graphJson", json.substring(14, json.length()-1));
 
+        // Preparation for Pareto calculation
         ParetoFinder paretoFinder = new ParetoFinder();
         TeamGenerator teamGenerator = new TeamGenerator(dataForm);
-        List<Integer> iterationSteps = List.of((int) Math.round(dataForm.getIterations() * 0.1),
-                                               (int) Math.round(dataForm.getIterations() * 0.2),
-                                               (int) Math.round(dataForm.getIterations() * 0.3),
-                                               (int) Math.round(dataForm.getIterations() * 0.4),
-                                               (int) Math.round(dataForm.getIterations() * 0.5),
-                                               (int) Math.round(dataForm.getIterations() * 0.6),
-                                               (int) Math.round(dataForm.getIterations() * 0.7),
-                                               (int) Math.round(dataForm.getIterations() * 0.8),
-                                               (int) Math.round(dataForm.getIterations() * 0.9),
-                                               (int) Math.round(dataForm.getIterations() * 1.0));
-                                               
-        //calculations for maximum number of iterations
-        List<List<Double>> teams100 = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(9));
-        for (int j = 0; j < teams100.size(); j++) {
-            List<Double> temp = new ArrayList<>();
-            temp.add((double) j);
-            temp.addAll(teams100.get(j));
-            teams100.set(j, temp);
-        }
+        int maxIterations = dataForm.getDevelopers() * dataForm.getAnalysts() * dataForm.getTesters();
 
-        List<List<Double>> optimalTeams100 = paretoFinder.getCustomPoints(teams100);
+        // Calculate all points if it is less than 500,000
+        if (maxIterations < 500000) {
+        // if (true) {
+            List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), maxIterations, false);
+            List<List<Double>> optimalTeams = paretoFinder.getCustomPoints(teams, false);
+            // model.addAttribute(DATA_PARETO, optimalTeams);
+            model.addAttribute(DATA_PARETO, optimalTeams);
+            model.addAttribute(DATA_ALL, teams);
+            return "output_full";
 
-        double[] avgArea = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        // Calculate a fraction of all points until the area difference is less than 10%
+        } else {
+            int base = 2;
+            int exp = 1;
+            List<List<Double>> teams = new ArrayList<>();
+            List<List<Double>> optimalTeams = new ArrayList<>();
+            List<Double> areas = new ArrayList<>();
+            List<Double> areasDiff = new ArrayList<>();
+            double area = 0.0;
+            // double maxMonteCarlo = Math.sqrt(Math.pow(base, Math.log(maxIterations)/Math.log(2) - 5 - exp));
+            double maxMonteCarlo = Math.pow(base, 22.0 - exp); // for testing
 
-        avgArea[9] = AreaFinder.getArea(optimalTeams100, optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1));
 
-        model.addAttribute("stepPareto100", optimalTeams100);
-        model.addAttribute("stepAll100", teams100);
-        model.addAttribute("area100", avgArea[9]);
+            //calculating first iteration average area
+            for (int i = 0; i < maxMonteCarlo; i++) {
+                
+                teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
+                optimalTeams = paretoFinder.getCustomPoints(teams, true);
+                areas = new ArrayList<>();
 
-        int maxIterationsForAvgArea = 1000;
-        
-        //calculations for iterations [10%, .., 90%]
-        for (int k = 0; k < maxIterationsForAvgArea; k++) {
-            for (int i = 0; i < iterationSteps.size() - 1; i++) {
-                List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), iterationSteps.get(i));
-                for (int j = 0; j < teams.size(); j++) {
-                    List<Double> temp = new ArrayList<>();
-                    temp.add((double) j);
-                    temp.addAll(teams.get(j));
-                    teams.set(j, temp);
-                }
-                avgArea[i] += AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)) / maxIterationsForAvgArea;
-                if (k == maxIterationsForAvgArea - 1) {
-                    model.addAttribute("stepPareto" + (i + 1) * 10, paretoFinder.getCustomPoints(teams));
-                    model.addAttribute("stepAll" + (i + 1) * 10, teams);
-                    model.addAttribute("area" + (i + 1) * 10, AreaFinder.getArea(paretoFinder.getCustomPoints(teams), optimalTeams100.get(0), optimalTeams100.get(optimalTeams100.size() - 1)));
-                }
+                List<Double> firstPoint = List.of(0.0, 0.0, optimalTeams.get(0).get(2));
+                List<Double> lastPoint  = List.of(0.0, optimalTeams.get(optimalTeams.size()-1).get(1), 0.0);
+                area += AreaFinder.getArea(optimalTeams, firstPoint, lastPoint) / maxMonteCarlo;
             }
-        }
+            exp++;
 
-        model.addAttribute("avgArea", avgArea);
+            areas.add(area);
 
-        return "output";
+            for (int i = 0; i < maxIterations; i++) {
+                area = 0.0;
+                maxMonteCarlo = Math.pow(base, 22.0 - exp);
+                for (int j = 0; j < maxMonteCarlo; j++) {
+                    
+                    teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
+                    optimalTeams = paretoFinder.getCustomPoints(teams, true);
+                
+                    List<Double> firstPoint = List.of(0.0, 0.0, optimalTeams.get(0).get(2));
+                    List<Double> lastPoint  = List.of(0.0, optimalTeams.get(optimalTeams.size()-1).get(1), 0.0);
+                    area += AreaFinder.getArea(optimalTeams, firstPoint, lastPoint) / maxMonteCarlo;
+                }
+                exp++;
+                areas.add(area);
+
+                System.out.println(teams.size());
+                System.out.println(optimalTeams.size()); 
+                System.out.println(area);
+
+                if (areas.get(areas.size() - 1) / areas.get(areas.size() - 2) < 1.05) {
+                    //model.addAttribute(DATA_ALL, teams);
+                    model.addAttribute(DATA_ALL, optimalTeams);
+                    model.addAttribute(DATA_PARETO, optimalTeams);
+                    model.addAttribute(DATA_AREA, areas);
+                    for (int j = 0; j < areas.size() - 1; j++) {
+                        areasDiff.add((areas.get(j + 1) / areas.get(j)) - 1);
+                    }
+                    model.addAttribute(DATA_AREA_DIFF, areasDiff);
+                    return "output";
+                }
+                
+            }
+            return "error";
+        } 
     }
 }

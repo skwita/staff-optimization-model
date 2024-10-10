@@ -11,8 +11,8 @@ function drawParetoCurve(stepPareto100, elementId) {
         var dataArray = stepPareto100;
 
         dataArray.forEach(function (row) {
-            var projectDuration = row[5];
-            var salary = row[4];
+            var projectDuration = row[2];
+            var salary = row[1];
             var operationNumber = "" + row[0];
             data.addRow([
                 projectDuration,

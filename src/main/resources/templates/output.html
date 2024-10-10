@@ -16,59 +16,7 @@
     <script th:src="@{/js/averageAreaPlot.js}"></script>
     <script th:src="@{/js/paretoCurve.js}"></script>
   </head>
-  <body>
-    <!-- graph -->
-    <script th:inline="javascript">
-      document.addEventListener("DOMContentLoaded", function () {
-        drawGraph([(${graphJson})], "graph");       
-      }); 
-    </script> 
-    
-    <!-- 10% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll10}]], [[${stepPareto10}]], "chart10", "10");
-    </script>
-    
-    <!-- 20% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll20}]], [[${stepPareto20}]], "chart20", "20");
-    </script>
-
-    <!-- 30% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll30}]], [[${stepPareto30}]], "chart30", "30");
-    </script>
-
-    <!-- 40% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll40}]], [[${stepPareto40}]], "chart40", "40");
-    </script>
-
-    <!-- 50% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll50}]], [[${stepPareto50}]], "chart50", "50");
-    </script>
-
-    <!-- 60% -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll60}]], [[${stepPareto60}]], "chart60", "60");
-    </script>
-
-    <!-- 70 -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll70}]], [[${stepPareto70}]], "chart70", "70");
-    </script>
-
-    <!-- 80 -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll80}]], [[${stepPareto80}]], "chart80", "80");
-    </script>
-
-    <!-- 90 -->
-    <script type="text/javascript">
-      drawChartN([[${stepAll90}]], [[${stepPareto90}]], "chart90", "90");
-    </script>
-
+  <body>    
     <!-- 100 -->
     <script type="text/javascript">
       drawChartN([[${stepAll100}]], [[${stepPareto100}]], "chart100", "100");
@@ -89,9 +37,96 @@
       drawParetoCurve([[${stepPareto100}]], "curve_chart");
     </script>
 
-    <!-- average area graph -->
-    <script th:inline="javascript">
-      drawAreaPlot([[${avgArea}]], "chart_avg_area")
+    <script type="text/javascript">
+        // Загрузка Google Charts
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Функция для рисования графика
+        function drawChart(yValues) {
+            // Подготовка данных
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X'); // Ось X (индексы)
+            data.addColumn('number', 'Y'); // Ось Y (значения)
+
+            // Формирование массива точек для графика (индексы X и значения Y)
+            var chartData = [];
+            for (var i = 0; i < yValues.length; i++) {
+                chartData.push([i, yValues[i]]);
+            }
+
+            // Добавление данных в таблицу
+            data.addRows(chartData);
+
+            // Настройки графика
+            var options = {
+                title: 'Пример графика',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                hAxis: {
+                    title: 'X'
+                },
+                vAxis: {
+                    title: 'Y'
+                }
+            };
+
+            // Создание и отображение графика
+            var chart = new google.visualization.LineChart(document.getElementById('chart_avg_area'));
+            chart.draw(data, options);
+        }
+
+        // Пример использования функции для рисования графика
+        google.charts.setOnLoadCallback(function() {
+            // Массив значений по оси Y
+            var yValues = [[${area}]];
+            drawChart(yValues);
+        });
+    </script>
+
+     <script type="text/javascript">
+        // Загрузка Google Charts
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Функция для рисования графика
+        function drawChartDiff(yValues) {
+            // Подготовка данных
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X'); // Ось X (индексы)
+            data.addColumn('number', 'Y'); // Ось Y (значения)
+
+            // Формирование массива точек для графика (индексы X и значения Y)
+            var chartData = [];
+            for (var i = 0; i < yValues.length; i++) {
+                chartData.push([i, yValues[i]]);
+            }
+
+            // Добавление данных в таблицу
+            data.addRows(chartData);
+
+            // Настройки графика
+            var options = {
+                title: 'Пример графика',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                hAxis: {
+                    title: 'X'
+                },
+                vAxis: {
+                    title: 'Y'
+                }
+            };
+
+            // Создание и отображение графика
+            var chart = new google.visualization.LineChart(document.getElementById('chart_avg_area_diff'));
+            chart.draw(data, options);
+        }
+
+        // Пример использования функции для рисования графика
+        google.charts.setOnLoadCallback(function() {
+            // Массив значений по оси Y
+            var yValues = [[${areaDiff}]];
+            drawChartDiff(yValues);
+        });
     </script>
 
     <div class="graph" id="graph"></div>
@@ -117,67 +152,9 @@
             <div class="chart_area_text" th:text="${stepAll100.size}"></div> 
         </div>
     </div>
-    <div class="container_grid">
-        <div>
-            <div class="chart_grid" id="chart10"></div>
-            <div class="chart_area_text" th:text="${area10}"></div> 
-            <div class="chart_area_text" th:text="${stepPareto10.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll10.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart20"></div>
-            <div class="chart_area_text" th:text="${area20}"></div>
-            <div class="chart_area_text" th:text="${stepPareto20.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll20.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart30"></div>
-            <div class="chart_area_text" th:text="${area30}"></div> 
-            <div class="chart_area_text" th:text="${stepPareto30.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll30.size}"></div> 
-        </div>
-    </div>
-    <div class="container_grid">
-        <div>
-            <div class="chart_grid" id="chart40"></div>
-            <div class="chart_area_text" th:text="${area40}"></div> 
-            <div class="chart_area_text" th:text="${stepPareto40.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll40.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart50"></div>
-            <div class="chart_area_text" th:text="${area50}"></div>
-            <div class="chart_area_text" th:text="${stepPareto50.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll50.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart60"></div>
-            <div class="chart_area_text" th:text="${area60}"></div>  
-            <div class="chart_area_text" th:text="${stepPareto60.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll60.size}"></div> 
-        </div>
-    </div>
-    <div class="container_grid">
-        <div>
-            <div class="chart_grid" id="chart70"></div>
-            <div class="chart_area_text" th:text="${area70}"></div>  
-            <div class="chart_area_text" th:text="${stepPareto70.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll70.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart80"></div>
-            <div class="chart_area_text" th:text="${area80}"></div>
-            <div class="chart_area_text" th:text="${stepPareto80.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll80.size}"></div> 
-        </div>
-        <div>
-            <div class="chart_grid" id="chart90"></div>
-            <div class="chart_area_text" th:text="${area90}"></div>  
-            <div class="chart_area_text" th:text="${stepPareto90.size}"></div> 
-            <div class="chart_area_text" th:text="${stepAll90.size}"></div> 
-        </div>
-    </div>
+    
     <div class="table" id="table_div"></div>
     <div class="chart_bottom" id="chart_avg_area"></div>
+    <div class="chart_bottom" id="chart_avg_area_diff"></div>
   </body>
 </html>
