@@ -21,6 +21,7 @@ public class InputController {
     private static final String DATA_PARETO = "stepPareto100";
     private static final String DATA_ALL = "stepAll100";
     private static final String DATA_AREA = "area";
+    private static final String DATA_AREA_DIFF = "areaDiff";
     //input form
     @GetMapping("/")
     public String showInputStagesForm(Model model) {
@@ -46,12 +47,12 @@ public class InputController {
 
         // Calculate all points if it is less than 500,000
         if (maxIterations < 500000) {
-        //if (true) {
+        // if (true) {
             List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), maxIterations, false);
             List<List<Double>> optimalTeams = paretoFinder.getCustomPoints(teams, false);
             // model.addAttribute(DATA_PARETO, optimalTeams);
+            model.addAttribute(DATA_PARETO, optimalTeams);
             model.addAttribute(DATA_ALL, teams);
-            model.addAttribute(DATA_ALL, optimalTeams);
             return "output_full";
 
         // Calculate a fraction of all points until the area difference is less than 10%
@@ -61,18 +62,22 @@ public class InputController {
             List<List<Double>> teams = new ArrayList<>();
             List<List<Double>> optimalTeams = new ArrayList<>();
             List<Double> areas = new ArrayList<>();
+            List<Double> areasDiff = new ArrayList<>();
             double area = 0.0;
-            
+            // double maxMonteCarlo = Math.sqrt(Math.pow(base, Math.log(maxIterations)/Math.log(2) - 5 - exp));
+            double maxMonteCarlo = Math.pow(base, 22.0 - exp); // for testing
+
+
             //calculating first iteration average area
-            area = 0.0;
-            for (int i = 0; i < Math.pow(base, 20.0 - exp); i++) {
+            for (int i = 0; i < maxMonteCarlo; i++) {
+                
                 teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
                 optimalTeams = paretoFinder.getCustomPoints(teams, true);
                 areas = new ArrayList<>();
 
                 List<Double> firstPoint = List.of(0.0, 0.0, optimalTeams.get(0).get(2));
                 List<Double> lastPoint  = List.of(0.0, optimalTeams.get(optimalTeams.size()-1).get(1), 0.0);
-                area += AreaFinder.getArea(optimalTeams, firstPoint, lastPoint) / Math.pow(base, 20.0 - exp);
+                area += AreaFinder.getArea(optimalTeams, firstPoint, lastPoint) / maxMonteCarlo;
             }
             exp++;
 
@@ -80,8 +85,9 @@ public class InputController {
 
             for (int i = 0; i < maxIterations; i++) {
                 area = 0.0;
-                double maxMonteCarlo = Math.pow(base, 20.0 - exp) > 4 ? Math.pow(base, 20.0 - exp) : 4.0;
+                maxMonteCarlo = Math.pow(base, 22.0 - exp);
                 for (int j = 0; j < maxMonteCarlo; j++) {
+                    
                     teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
                     optimalTeams = paretoFinder.getCustomPoints(teams, true);
                 
@@ -91,18 +97,20 @@ public class InputController {
                 }
                 exp++;
                 areas.add(area);
+
                 System.out.println(teams.size());
                 System.out.println(optimalTeams.size()); 
                 System.out.println(area);
-                //System.out.println(areas.get(areas.size() - 1));
+
                 if (areas.get(areas.size() - 1) / areas.get(areas.size() - 2) < 1.05) {
-                //if (Math.pow(2,i) >= maxIterations-10) {
-                    System.out.println(i);
-                    System.out.println(areas.get(areas.size() - 1) / areas.get(areas.size() - 2));
                     //model.addAttribute(DATA_ALL, teams);
                     model.addAttribute(DATA_ALL, optimalTeams);
                     model.addAttribute(DATA_PARETO, optimalTeams);
                     model.addAttribute(DATA_AREA, areas);
+                    for (int j = 0; j < areas.size() - 1; j++) {
+                        areasDiff.add((areas.get(j + 1) / areas.get(j)) - 1);
+                    }
+                    model.addAttribute(DATA_AREA_DIFF, areasDiff);
                     return "output";
                 }
                 

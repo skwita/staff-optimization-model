@@ -51,7 +51,7 @@
             // Формирование массива точек для графика (индексы X и значения Y)
             var chartData = [];
             for (var i = 0; i < yValues.length; i++) {
-                chartData.push([Math.pow(2, i+1), yValues[i]]);
+                chartData.push([i, yValues[i]]);
             }
 
             // Добавление данных в таблицу
@@ -83,6 +83,52 @@
         });
     </script>
 
+     <script type="text/javascript">
+        // Загрузка Google Charts
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Функция для рисования графика
+        function drawChartDiff(yValues) {
+            // Подготовка данных
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X'); // Ось X (индексы)
+            data.addColumn('number', 'Y'); // Ось Y (значения)
+
+            // Формирование массива точек для графика (индексы X и значения Y)
+            var chartData = [];
+            for (var i = 0; i < yValues.length; i++) {
+                chartData.push([i, yValues[i]]);
+            }
+
+            // Добавление данных в таблицу
+            data.addRows(chartData);
+
+            // Настройки графика
+            var options = {
+                title: 'Пример графика',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                hAxis: {
+                    title: 'X'
+                },
+                vAxis: {
+                    title: 'Y'
+                }
+            };
+
+            // Создание и отображение графика
+            var chart = new google.visualization.LineChart(document.getElementById('chart_avg_area_diff'));
+            chart.draw(data, options);
+        }
+
+        // Пример использования функции для рисования графика
+        google.charts.setOnLoadCallback(function() {
+            // Массив значений по оси Y
+            var yValues = [[${areaDiff}]];
+            drawChartDiff(yValues);
+        });
+    </script>
+
     <div class="graph" id="graph"></div>
     <div class="container_grid">
         <div>
@@ -109,5 +155,6 @@
     
     <div class="table" id="table_div"></div>
     <div class="chart_bottom" id="chart_avg_area"></div>
+    <div class="chart_bottom" id="chart_avg_area_diff"></div>
   </body>
 </html>
