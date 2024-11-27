@@ -1,4 +1,4 @@
-function drawParetoCurve(stepPareto100, elementId) {
+function drawParetoCurveNormal(stepPareto100, elementId) {
     google.charts.load("current", { packages: ["corechart"] });
     google.charts.setOnLoadCallback(function () {
         var data = new google.visualization.DataTable();
@@ -11,8 +11,8 @@ function drawParetoCurve(stepPareto100, elementId) {
         var dataArray = stepPareto100;
 
         dataArray.forEach(function (row) {
-            var projectDuration = row[2];
-            var salary = row[1];
+            var projectDuration = 1 / row[2];
+            var salary = 1 / row[1];
             var operationNumber = "" + row[0];
             data.addRow([
                 projectDuration,

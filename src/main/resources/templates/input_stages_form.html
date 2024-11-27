@@ -52,8 +52,83 @@
       <br />
       <input type="button" value="Add Row" onclick="addRow()" />
       <br /><br />
+      <table id="staffTable">
+        <tr>
+          <th></th>
+          <th>Junior</th>
+          <th>Middle</th>
+          <th>Senior</th>
+        </tr>
+      <br />
+        <tr>
+          <td>Analysts</td>
+          <td><input
+              type="number"
+              id="analysts"
+              th:field="*{analystsJunior}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="analysts"
+              th:field="*{analystsMiddle}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="analysts"
+              th:field="*{analystsSenior}"
+              required
+            /></td>
+        </tr>
+      <br />
+        <tr>
+          <td>Developers</td>
+          <td><input
+              type="number"
+              id="developers"
+              th:field="*{developersJunior}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="developers"
+              th:field="*{developersMiddle}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="developers"
+              th:field="*{developersSenior}"
+              required
+            /></td>
+        </tr>
+      <br />
+        <tr>
+          <td>Testers</td>
+          <td><input
+              type="number"
+              id="testers"
+              th:field="*{testersJunior}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="testers"
+              th:field="*{testersMiddle}"
+              required
+            /></td>
+          <td><input
+              type="number"
+              id="testers"
+              th:field="*{testersSenior}"
+              required
+            /></td>
+        </tr>
+      <br />
+      </table>
 
-      <label for="analysts">Number of Analysts:</label>
+      <!-- <label for="analysts">Number of Analysts:</label>
       <input
         type="number"
         id="analysts"
@@ -75,7 +150,7 @@
         id="testers"
         th:field="*{testers}"
         required
-      /><br /><br />
+      /><br /><br /> -->
 
       <!-- <label for="iterations">Number of Iterations:</label>
       <input
