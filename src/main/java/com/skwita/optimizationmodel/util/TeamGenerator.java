@@ -76,9 +76,9 @@ public class TeamGenerator {
 
         for (DataRow row : dataForm.getRows()) {
             List<Integer> availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), List.of(1, 1, 1));
-            double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (((availableWorkers.get(0) * 0.75 + (availableWorkers.get(1) * 1 + (availableWorkers.get(2) * 1.2))) / 
+            double timeToComplete = Double.parseDouble(row.getLaborCosts()) / ((availableWorkers.get(0) * 0.75 + (availableWorkers.get(1) * 1 + (availableWorkers.get(2) * 1.2))) / 
                                                                                (1 + 0.05 * (availableWorkers.get(0) + (availableWorkers.get(1) + (availableWorkers.get(2)))) * 
-                                                                               ((availableWorkers.get(0) + (availableWorkers.get(1) + (availableWorkers.get(2)))) - 1) / 2)));
+                                                                               ((availableWorkers.get(0) + (availableWorkers.get(1) + (availableWorkers.get(2)))) - 1) / 2));
 
             if (row.getResponsibleRole().equals("developer")) {
                 cost += timeToComplete * 0.5 * numDevelopers.get(0) + 
