@@ -40,15 +40,42 @@ public class InputController {
         String json = GraphBuilder.graphToJson(dataForm);
         model.addAttribute("graphJson", json.substring(14, json.length()-1));
 
+        int[] analysts = new int[]{dataForm.getAnalystsJunior(),
+                                   dataForm.getAnalystsMiddle(),
+                                   dataForm.getAnalystsSenior()};
+
+        int[] developers = new int[]{dataForm.getDevelopersJunior(),
+                                     dataForm.getDevelopersMiddle(),
+                                     dataForm.getDevelopersSenior()};
+
+        int[] testers = new int[]{dataForm.getTestersJunior(),
+                                  dataForm.getTestersMiddle(),
+                                  dataForm.getTestersSenior()};
+
         // Preparation for Pareto calculation
         ParetoFinder paretoFinder = new ParetoFinder();
         TeamGenerator teamGenerator = new TeamGenerator(dataForm);
-        int maxIterations = dataForm.getDevelopers() * dataForm.getAnalysts() * dataForm.getTesters();
+        int maxIterations = 1;
+        for (int i = 0; i < analysts.length; i++) {
+            if (analysts[i] > 0) {
+                maxIterations *= analysts[i];
+            }
+        }
+        for (int i = 0; i < analysts.length; i++) {
+            if (developers[i] > 0) {
+                maxIterations *= developers[i];
+            }
+        }
+        for (int i = 0; i < analysts.length; i++) {
+            if (testers[i] > 0) {
+                maxIterations *= testers[i];
+            }
+        }
 
         // Calculate all points if it is less than 500,000
         if (maxIterations < 500000) {
         // if (true) {
-            List<List<Double>> teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), maxIterations, false);
+            List<List<Double>> teams = teamGenerator.generateAll(analysts, developers, testers, maxIterations, false);
             List<List<Double>> optimalTeams = paretoFinder.getCustomPoints(teams, false);
             // model.addAttribute(DATA_PARETO, optimalTeams);
             model.addAttribute(DATA_PARETO, optimalTeams);
@@ -71,7 +98,7 @@ public class InputController {
             //calculating first iteration average area
             for (int i = 0; i < maxMonteCarlo; i++) {
                 
-                teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
+                teams = teamGenerator.generateAll(analysts, developers, testers, (int)Math.pow(base, exp), true);
                 optimalTeams = paretoFinder.getCustomPoints(teams, true);
                 areas = new ArrayList<>();
 
@@ -88,7 +115,7 @@ public class InputController {
                 maxMonteCarlo = Math.pow(base, 22.0 - exp);
                 for (int j = 0; j < maxMonteCarlo; j++) {
                     
-                    teams = teamGenerator.generateAll(dataForm.getDevelopers(), dataForm.getTesters(), dataForm.getAnalysts(), (int)Math.pow(base, exp), true);
+                    teams = teamGenerator.generateAll(analysts, developers, testers, (int)Math.pow(base, exp), true);
                     optimalTeams = paretoFinder.getCustomPoints(teams, true);
                 
                     List<Double> firstPoint = List.of(0.0, 0.0, optimalTeams.get(0).get(2));

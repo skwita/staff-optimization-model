@@ -18,6 +18,13 @@
 
     </head>
     <body>
+        <!-- graph -->
+        <script th:inline="javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+                drawGraph([(${graphJson})], "graph");       
+            }); 
+        </script>
+
         <!-- 100 -->
         <script type="text/javascript">
             drawChartN([[${stepAll100}]], [[${stepPareto100}]], "chart100", "100");

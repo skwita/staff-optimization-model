@@ -24,7 +24,7 @@ function drawGraph(graphJson, graphElementId) {
                     "text-valign": "center",
                     color: "#fff",
                     "text-outline-width": 2,
-                    "text-outline-color": "#888",
+                    "text-outline-color": "#888"
                 },
             },
             {
@@ -32,8 +32,9 @@ function drawGraph(graphJson, graphElementId) {
                 style: {
                     width: 2,
                     "line-color": "#ccc",
-                    "target-arrow-color": "#ccc",
                     "target-arrow-shape": "triangle",
+                    'target-arrow-color': '#ccc',
+                    'curve-style': 'bezier'
                 },
             },
         ],

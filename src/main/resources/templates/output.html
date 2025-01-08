@@ -15,8 +15,16 @@
     <script th:src="@{/js/plotAll.js}"></script>
     <script th:src="@{/js/averageAreaPlot.js}"></script>
     <script th:src="@{/js/paretoCurve.js}"></script>
+    <script th:src="@{/js/paretoCurveNormal.js}"></script>
   </head>
-  <body>    
+  <body>   
+    <!-- graph -->
+    <script th:inline="javascript" type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            drawGraph([(${graphJson})], "graph");       
+        }); 
+    </script>
+    
     <!-- 100 -->
     <script type="text/javascript">
       drawChartN([[${stepAll100}]], [[${stepPareto100}]], "chart100", "100");
@@ -24,7 +32,7 @@
 
     <!-- all no pareto -->
     <script type="text/javascript">
-      drawChartAll([[${stepAll100}]], "chart_all");
+        drawParetoCurveNormal([[${stepAll100}]], "chart_all");
     </script>
 
     <!-- table -->
