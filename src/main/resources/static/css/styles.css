@@ -11,12 +11,14 @@ body {
 
 /* Настройки для верхнего графа */
 .graph {
-    width: 66.66%; /* Занимает 2/3 ширины страницы */
-    height: 200px; /* Высота 100px */
+    width: 100%; /* Занимает 2/3 ширины страницы */
+    height: 400px; /* Высота 100px */
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /* Настройки для container_main */
@@ -28,7 +30,7 @@ body {
 }
 
 .chart_main {
-    width: 32%; /* Каждая диаграмма занимает примерно треть ширины контейнера */
+    width: 30%; /* Каждая диаграмма занимает примерно треть ширины контейнера */
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -41,12 +43,12 @@ body {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .container_grid > div {
     width: 32%; /* Каждому блоку дается треть ширины контейнера с учетом отступов */
-    margin-bottom: 20px; /* Отступ снизу между блоками */
+    /* margin-bottom: 20px; Отступ снизу между блоками */
     box-sizing: border-box; /* Учитывает отступы и границы в ширину */
 }
 
@@ -77,6 +79,79 @@ body {
     padding: 10px;
     margin: 10px 1%;
     height: 400px; /* Фиксированная высота для таблицы и графика */
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+}
+
+/* Контейнер формы */
+.form-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 60%;
+}
+
+/* Стили для таблиц */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.styled-table th, .styled-table td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  text-align: center;
+}
+
+.styled-table th {
+  background-color: #979797;
+  color: white;
+}
+
+.styled-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Кнопки */
+.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-submit {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-submit:hover {
+  background-color: #218838;
+}
+
+input[type="text"], input[type="number"] {
+  width: 90%;
+  padding: 4px;
+  margin: 2px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 /* Адаптивность для мобильных устройств */

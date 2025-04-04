@@ -11,10 +11,18 @@ import lombok.ToString;
 @ToString
 public class DataForm {
     private List<DataRow> rows;
-    private int developers;
-    private int testers;
-    private int analysts;
-    private int iterations;
+
+    private int developersJunior;
+    private int developersMiddle;
+    private int developersSenior;
+
+    private int testersJunior;
+    private int testersMiddle;
+    private int testersSenior;
+
+    private int analystsJunior;
+    private int analystsMiddle;
+    private int analystsSenior;
 
     public int size() {
         return rows.size();
