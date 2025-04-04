@@ -1,166 +1,76 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>Dynamic Table</title>
-    <script>
-      let stageCode = "A";
+<head>
+  <title>Dynamic Table</title>
+  <link href="css/styles.css" rel="stylesheet" />
+  <script>
+    let stageCode = "A";
 
-      function addRow() {
-        const table = document.getElementById("dataTable");
-        const rowCount = table.rows.length;
-        const row = table.insertRow(rowCount);
+    function addRow() {
+      const table = document.getElementById("dataTable");
+      const rowCount = table.rows.length;
+      const row = table.insertRow(rowCount);
 
-        row.innerHTML = `
-                <td>${stageCode}</td>
-                <td><input type="text" name="rows[${
-                  rowCount - 1
-                }].stageName"/></td>
-                <td><input type="text" name="rows[${
-                  rowCount - 1
-                }].responsibleRole"/></td>
-                <td><input type="text" name="rows[${
-                  rowCount - 1
-                }].previousStage"/></td>
-                <td><input type="text" name="rows[${
-                  rowCount - 1
-                }].laborCosts"/></td>
-            `;
+      row.innerHTML = `
+              <td>${stageCode}</td>
+              <td><input type="text" name="rows[${rowCount - 1}].stageName"/></td>
+              <td><input type="text" name="rows[${rowCount - 1}].responsibleRole"/></td>
+              <td><input type="text" name="rows[${rowCount - 1}].previousStage"/></td>
+              <td><input type="text" name="rows[${rowCount - 1}].laborCosts"/></td>
+          `;
 
-        stageCode = String.fromCharCode(stageCode.charCodeAt(0) + 1);
-      }
+      stageCode = String.fromCharCode(stageCode.charCodeAt(0) + 1);
+    }
 
-      window.onload = function () {
-        addRow();
-        const initialRows =
-          document.getElementById("dataTable").rows.length - 1;
-        stageCode = String.fromCharCode("A".charCodeAt(0) + initialRows);
-      };
-    </script>
-  </head>
-  <body>
-    <h2>Enter Data</h2>
-    <form th:action="@{/submitData}" th:object="${dataForm}" method="post">
-      <table id="dataTable">
-        <tr>
-          <th>Stage code</th>
-          <th>Stage name</th>
-          <th>Responsible role</th>
-          <th>Previous stage</th>
-          <th>Labor costs</th>
-        </tr>
-      </table>
-      <br />
-      <input type="button" value="Add Row" onclick="addRow()" />
-      <br /><br />
-      <table id="staffTable">
-        <tr>
-          <th></th>
-          <th>Junior</th>
-          <th>Middle</th>
-          <th>Senior</th>
-        </tr>
-      <br />
-        <tr>
-          <td>Analysts</td>
-          <td><input
-              type="number"
-              id="analysts"
-              th:field="*{analystsJunior}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="analysts"
-              th:field="*{analystsMiddle}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="analysts"
-              th:field="*{analystsSenior}"
-              required
-            /></td>
-        </tr>
-      <br />
-        <tr>
-          <td>Developers</td>
-          <td><input
-              type="number"
-              id="developers"
-              th:field="*{developersJunior}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="developers"
-              th:field="*{developersMiddle}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="developers"
-              th:field="*{developersSenior}"
-              required
-            /></td>
-        </tr>
-      <br />
-        <tr>
-          <td>Testers</td>
-          <td><input
-              type="number"
-              id="testers"
-              th:field="*{testersJunior}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="testers"
-              th:field="*{testersMiddle}"
-              required
-            /></td>
-          <td><input
-              type="number"
-              id="testers"
-              th:field="*{testersSenior}"
-              required
-            /></td>
-        </tr>
-      <br />
-      </table>
-
-      <!-- <label for="analysts">Number of Analysts:</label>
-      <input
-        type="number"
-        id="analysts"
-        th:field="*{analysts}"
-        required
-      /><br /><br />
-
-      <label for="developers">Number of Developers:</label>
-      <input
-        type="number"
-        id="developers"
-        th:field="*{developers}"
-        required
-      /><br /><br />
-
-      <label for="testers">Number of Testers:</label>
-      <input
-        type="number"
-        id="testers"
-        th:field="*{testers}"
-        required
-      /><br /><br /> -->
-
-      <!-- <label for="iterations">Number of Iterations:</label>
-      <input
-        type="number"
-        id="iterations"
-        th:field="*{iterations}"
-        required
-      /><br /><br /> -->
-
-      <input type="submit" value="Submit" />
-    </form>
-  </body>
+    window.onload = function () {
+      addRow();
+      const initialRows = document.getElementById("dataTable").rows.length - 1;
+      stageCode = String.fromCharCode("A".charCodeAt(0) + initialRows);
+    };
+  </script>
+</head>
+<body>
+  <h2>Enter Data</h2>
+  <form th:action="@{/submitData}" th:object="${dataForm}" method="post" class="form-container">
+    <table id="dataTable" class="styled-table">
+      <tr>
+        <th>Stage code</th>
+        <th>Stage name</th>
+        <th>Responsible role</th>
+        <th>Previous stage</th>
+        <th>Labor costs</th>
+      </tr>
+    </table>
+    <br />
+    <input type="button" value="Add Row" class="btn" onclick="addRow()" />
+    <br /><br />
+    <table id="staffTable" class="styled-table">
+      <tr>
+        <th></th>
+        <th>Junior</th>
+        <th>Middle</th>
+        <th>Senior</th>
+      </tr>
+      <tr>
+        <td>Analysts</td>
+        <td><input type="number" id="analysts" th:field="*{analystsJunior}" required /></td>
+        <td><input type="number" id="analysts" th:field="*{analystsMiddle}" required /></td>
+        <td><input type="number" id="analysts" th:field="*{analystsSenior}" required /></td>
+      </tr>
+      <tr>
+        <td>Developers</td>
+        <td><input type="number" id="developers" th:field="*{developersJunior}" required /></td>
+        <td><input type="number" id="developers" th:field="*{developersMiddle}" required /></td>
+        <td><input type="number" id="developers" th:field="*{developersSenior}" required /></td>
+      </tr>
+      <tr>
+        <td>Testers</td>
+        <td><input type="number" id="testers" th:field="*{testersJunior}" required /></td>
+        <td><input type="number" id="testers" th:field="*{testersMiddle}" required /></td>
+        <td><input type="number" id="testers" th:field="*{testersSenior}" required /></td>
+      </tr>
+    </table>
+    <input type="submit" value="Submit" class="btn-submit" />
+  </form>
+</body>
 </html>
