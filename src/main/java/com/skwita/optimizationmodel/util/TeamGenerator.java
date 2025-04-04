@@ -31,14 +31,14 @@ public class TeamGenerator {
                                              random.nextInt(maxTesters[0] + 1),
                                              random.nextInt(maxTesters[1] + 1),
                                              random.nextInt(maxTesters[2] + 1));
-            boolean isValidTeam = !((tempTeam.get(0) == 0 && tempTeam.get(1) == 0 && tempTeam.get(2) == 0) ||
-                                    (tempTeam.get(3) == 0 && tempTeam.get(4) == 0 && tempTeam.get(5) == 0) ||
-                                    (tempTeam.get(6) == 0 && tempTeam.get(7) == 0 && tempTeam.get(8) == 0));
-            if (uniqueTeams.contains(tempTeam) || !isValidTeam) {
-                continue;
-            } else {
+            boolean isValidTeam = (tempTeam.get(0) != 0 || tempTeam.get(1) != 0 || tempTeam.get(2) != 0) &&
+                                  (tempTeam.get(3) != 0 || tempTeam.get(4) != 0 || tempTeam.get(5) != 0) &&
+                                  (tempTeam.get(6) != 0 || tempTeam.get(7) != 0 || tempTeam.get(8) != 0);
+            if (!uniqueTeams.contains(tempTeam) && isValidTeam) {
                 uniqueTeams.add(tempTeam);
                 iterationCounter++;
+            } else {
+                continue;
             }
 
             currentTeam.add(Double.valueOf(iterationCounter));
@@ -58,10 +58,13 @@ public class TeamGenerator {
 
             currentTeam.addAll(tempTeam.stream()
                                        .map(Integer::doubleValue)
-                                       .collect(Collectors.toList()));
+                                       .toList());
 
             results.add(currentTeam);
         }
+
+        System.out.println(uniqueTeams.size());
+        System.out.println(results.size());
 
         return results;
     }
@@ -116,12 +119,6 @@ public class TeamGenerator {
             inDegree.putIfAbsent(row.getStageCode(), 0);
             
             List<Integer> availableWorkers = roleCapacity.getOrDefault(row.getResponsibleRole(), List.of(1, 1, 1));
-            // double timeToComplete = Double.parseDouble(row.getLaborCosts()) / ((availableWorkers.get(0) * 0.75 / 
-            //                                                                    (1 + 0.05 * availableWorkers.get(0) * (availableWorkers.get(0) - 1) / 2)) + 
-            //                                                                    (availableWorkers.get(1) * 1 / 
-            //                                                                    (1 + 0.05 * availableWorkers.get(1) * (availableWorkers.get(1) - 1) / 2)) + 
-            //                                                                    (availableWorkers.get(2) * 1.2 / 
-            //                                                                    (1 + 0.05 * availableWorkers.get(2) * (availableWorkers.get(2) - 1) / 2)));
 
             double timeToComplete = Double.parseDouble(row.getLaborCosts()) / (((availableWorkers.get(0) * 0.75 + (availableWorkers.get(1) * 1 + (availableWorkers.get(2) * 1.2))) / 
                                                                                (1 + 0.05 * (availableWorkers.get(0) + (availableWorkers.get(1) + (availableWorkers.get(2)))) * 
